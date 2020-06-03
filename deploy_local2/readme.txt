@@ -1,4 +1,5 @@
-This is code deploys the generator (african fabric dataset) to the localhost. Both the GET and POST requests are successful on Postman. On the browser, the get request is successful but post request fails.
+This is code deploys the generator (african fabric dataset) to the localhost. Both the GET and POST requests are successful on Postman. On the browser, the get request is successful but post request fails (405 method not allowed error). I looked at https://airbrake.io/blog/http-errors/405-method-not-allowed
+but too many possibilities - I do not know how to debug.
 
 To run this code :
 conda env create --file model\conda.yaml
