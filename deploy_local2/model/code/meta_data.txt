@@ -1,0 +1,5 @@
+{
+  "version": "1.0",
+  "description": "The generator part of trained GAN. state_dict()",
+  "input": "The predict method does not need an input. It generates random numbers which are the input to the generator. Every invocation should generate different set of 100 random numbers."
+}
