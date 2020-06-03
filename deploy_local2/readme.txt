@@ -17,3 +17,5 @@ Send GET request by clicking on "send" (localhost:5000/). The following should a
 
 Sent a POST request by clicking on "send" (localhost:5000/predict). A 8x8 grid of african fabric designs should appear. Clicking the
 "send" button repeatedly should display a different set of 64 images. Make sure that the input is set to "none" in "Body" while sending the request.
+
+A screenshot of the postman is shown in african_fabric_deploy.png
