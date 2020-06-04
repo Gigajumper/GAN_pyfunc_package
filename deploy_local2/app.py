@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, send_file
 import mlflow.pyfunc
-#import pandas as pd
 import json
 from PIL import Image
 import io
@@ -24,7 +23,7 @@ def meta_data():
 	return jsonify(load_meta_data)
 
 # Prediction endpoint
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST','GET'])
 def predict():
  req = request.get_json()
 	
