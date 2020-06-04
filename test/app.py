@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 import mlflow.pyfunc
-#import pandas as pd
 import json
+from PIL import Image
+import io
+import numpy as np
+import torchvision.utils as vutils
 
 # Name of the apps module package
 app = Flask(__name__)
@@ -20,43 +23,34 @@ def meta_data():
 	return jsonify(load_meta_data)
 
 # Prediction endpoint
-@app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST','GET'])
 def predict():
  req = request.get_json()
 	
-# Log the request
- print({'request': req})
-
-# Format the request data in a DataFrame
-# inf_df = pd.DataFrame(req['data'])
-
-# Get model prediction - convert from np to list
-# fakeimage = model.predict(inf_df).tolist()
  fakeimage = model.predict(0)
 
-# Log the prediction
-# print({'response': pred})
-# img = outimage.numpy()
- print('\n\timg = ',type(fakeimage))
- print('\n\timg.shape = ',fakeimage.shape)
+# print('\n\tfakeimg = ',type(fakeimage))
+# print('\n\tfakeimg.shape = ',fakeimage.shape)
 
- imgnp = fakeimage.numpy()
+ imggrd = vutils.make_grid(fakeimage, padding=2, normalize=True)
+ imgnp = imggrd.numpy()
+ imgnpT = np.transpose(imgnp,(1,2,0))
 
- print('\n',type(imgnp))
- print('\n',imgnp.shape) #(64, 3, 64, 64)
+# print('\ntype(imgnp) =  ',type(imgnp))
+# print('\nshape(imgnp) = ',imgnp.shape) #(64, 3, 64, 64)
 
- singleimg = imgnp[5,:,:,:]
+ imgPIL = Image.fromarray((255*imgnpT).astype("uint8"),'RGB')
 
-# print('\nsingleimg = ',singleimg[:,0:64:5,0:64:10])
+ #create file-object in memory
+ file_object = io.BytesIO()
 
-# img = Image.fromarray(img.astype("uint8"))
-#	rawBytes = io.BytesIO()#
-#	img.save(rawBytes, "JPEG")#
-#	rawBytes.seek(0)
-#	img_base64 = base64.b64encode(rawBytes.read())
-#	return jsonify({'status':str(img_base64)})
+# write PNG in file-object
+ imgPIL.save(file_object,'PNG')
  
-# Return prediction as reponse
- return jsonify(['DONE : Ideally this should be an image'])
+ file_object.seek(0)
+ 
+# Return prediction as response
+# return jsonify(['DONE : Ideally this should be an image'])
+ return send_file(file_object,mimetype='image/PNG')
 
 app.run(host='0.0.0.0', port=5000, debug=True)
